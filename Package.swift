@@ -13,16 +13,24 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/gfreezy/libfvad", .upToNextMajor(from: "0.1.0")),
         .package(url: "https://github.com/Quick/Quick", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/Quick/Nimble", .upToNextMajor(from: "12.0.0")),
     ],
     targets: [
         .target(
-            name: "VoiceActivityDetector",
-            dependencies: [
-                .product(name: "libfvad", package: "libfvad"),
+            name: "libfvad",
+            path: "Sources/libfvad",
+            sources: ["src"],
+            publicHeadersPath: "include",
+            cSettings: [
+                .headerSearchPath("src"),
+                .headerSearchPath("src/signal_processing"),
+                .headerSearchPath("src/vad"),
             ]
+        ),
+        .target(
+            name: "VoiceActivityDetector",
+            dependencies: ["libfvad"]
         ),
         .testTarget(
             name: "VoiceActivityDetectorTests",
